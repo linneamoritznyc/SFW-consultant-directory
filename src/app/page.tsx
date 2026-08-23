@@ -14,7 +14,7 @@ export default function HomePage() {
       </h1>
       <p className="mt-4 text-lg text-soil-600">
         Certified consultants and lab-techs, searchable by crop, soil type,
-        language, and ecological region — not just by country.
+        language, and ecological region - not just by country.
       </p>
       <div className="mt-8 flex justify-center gap-4">
         <Link

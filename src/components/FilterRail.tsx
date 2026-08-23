@@ -204,7 +204,7 @@ export default function FilterRail({ all, filters, onChange }: Props) {
 
       <Section title="Biome (RESOLVE 2017)">
         <p className="mb-1 text-[11px] leading-snug text-soil-500">
-          A coarse ecological-similarity signal — not a claim of soil
+          A coarse ecological-similarity signal - not a claim of soil
           equivalence.
         </p>
         {BIOMES.map((biome) => (

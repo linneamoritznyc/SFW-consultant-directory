@@ -53,7 +53,7 @@ function textMatches(p: Practitioner, q: string): boolean {
   const normQuery = query.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   if (haystacks.includes(normQuery)) return true;
 
-  // Layer 4: synonym expansion — "viñedo" resolves to the vineyard term (and
+  // Layer 4: synonym expansion - "viñedo" resolves to the vineyard term (and
   // its descendants) regardless of profile language.
   for (const term of synonymHits(query)) {
     const slugs = expandDown(term.slug);
@@ -152,7 +152,7 @@ export function search(
 
 // --- Facet counts (PRD §5.4) -----------------------------------------------
 // Each option's count is computed against the currently applied filters with
-// that option's own group removed — the standard faceted pattern that shows
+// that option's own group removed - the standard faceted pattern that shows
 // "Turkish (3)" before clicking, preventing dead ends.
 export function facetCount(
   all: Practitioner[],

@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="flex-1 flex flex-col">{children}</main>
         <footer className="bg-soil-100 text-soil-600 text-xs px-4 py-3 text-center">
-          Demo build — all practitioner profiles are fictional sample data.
+          Demo build - all practitioner profiles are fictional sample data.
           Ecoregion labels follow RESOLVE Ecoregions 2017 (Dinerstein et al.).
         </footer>
       </body>

@@ -71,7 +71,7 @@ export default function ContactForm({ practitionerSlug }: { practitionerSlug: st
       </button>
       {status === "error" && (
         <p className="text-sm text-clay-600">
-          Something went wrong — please try again.
+          Something went wrong - please try again.
         </p>
       )}
     </form>

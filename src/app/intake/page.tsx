@@ -1,6 +1,6 @@
 import IntakeForm from "@/components/IntakeForm";
 
-export const metadata = { title: "Get matched — Soil Food Web Directory" };
+export const metadata = { title: "Get matched - Soil Food Web Directory" };
 
 export default function IntakePage() {
   return (

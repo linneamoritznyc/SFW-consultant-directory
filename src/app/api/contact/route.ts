@@ -3,7 +3,7 @@ import { bySlug } from "@/lib/data";
 
 // Contact relay (PRD §8.2). Raw practitioner emails are never exposed to the
 // client; the server looks up the real address and relays the message. This
-// endpoint is also where enquiry-volume data is recorded — the first such
+// endpoint is also where enquiry-volume data is recorded - the first such
 // dataset the organisation has ever had.
 //
 // Production: persist to the `enquiry` table and send via a transactional

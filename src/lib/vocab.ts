@@ -1,7 +1,7 @@
 import type { VocabTerm, Vocabulary } from "./types";
 
 // Controlled vocabularies (PRD §4.2). Slugs are stable and never translated;
-// labels here are the 'en' locale. Synonyms are search-time expansion only —
+// labels here are the 'en' locale. Synonyms are search-time expansion only -
 // they include cross-locale variants so "viñedo" resolves to `vineyard`.
 // Hierarchy: parentSlug builds the tree; query expansion goes DOWN only.
 
@@ -17,7 +17,7 @@ function t(
 }
 
 export const TERMS: VocabTerm[] = [
-  // Crops — hierarchical
+  // Crops - hierarchical
   t("crop", "perennial_fruit", "Perennial fruit"),
   t("crop", "vine_fruit", "Vine fruit", [], "perennial_fruit"),
   t("crop", "vineyard", "Vineyard / wine grapes", ["wine grapes", "viticulture", "viticultura", "viñedo", "vinha", "bağ", "vingård", "grapes"], "vine_fruit"),

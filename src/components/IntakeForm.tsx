@@ -21,7 +21,7 @@ const QUESTIONS: Question[] = [
   {
     key: "biome",
     title: "Which best describes your region?",
-    hint: "We match on ecological similarity, not distance — a grower in Andalusia and one in coastal California share more than either shares with a neighbour two climate zones away.",
+    hint: "We match on ecological similarity, not distance - a grower in Andalusia and one in coastal California share more than either shares with a neighbour two climate zones away.",
     options: BIOMES.map((b) => ({ value: b, label: b })),
   },
   {
@@ -161,7 +161,7 @@ function Results({ matches, onRestart }: { matches: Match[]; onRestart: () => vo
           <Link href="/directory?remote=true" className="text-leaf-700 hover:underline">
             browsing remote-capable practitioners
           </Link>{" "}
-          — many advise growers far outside their own region.
+          - many advise growers far outside their own region.
         </p>
       )}
       <div className="mt-4 space-y-4">

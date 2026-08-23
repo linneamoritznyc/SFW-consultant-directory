@@ -64,7 +64,7 @@ export default function DirectoryClient({
 
   return (
     <div className="flex flex-1 flex-col lg:h-[calc(100vh-49px)] lg:flex-row lg:overflow-hidden">
-      {/* Filter rail — 280px on desktop (PRD §6.1) */}
+      {/* Filter rail - 280px on desktop (PRD §6.1) */}
       <aside className="order-2 shrink-0 overflow-y-auto border-r border-soil-200 bg-white px-4 pb-8 lg:order-1 lg:w-[280px]">
         <FilterRail all={practitioners} filters={filters} onChange={setFilters} />
       </aside>
@@ -76,7 +76,7 @@ export default function DirectoryClient({
             type="search"
             defaultValue={filters.q ?? ""}
             key={filters.q ?? ""}
-            placeholder="Search names, places, crops — any language"
+            placeholder="Search names, places, crops - any language"
             onKeyDown={(e) => {
               if (e.key === "Enter")
                 setFilters({ ...filters, q: e.currentTarget.value || undefined });
@@ -146,7 +146,7 @@ function EmptyState({
       <h3 className="font-semibold text-soil-900">
         No practitioners match all of your filters
         {active.length > 0 && nearest.length > 0
-          ? ` — the “${nearest[0].droppedLabel}” constraint is the one that failed`
+          ? ` - the “${nearest[0].droppedLabel}” constraint is the one that failed`
           : ""}
         .
       </h3>
@@ -174,7 +174,7 @@ function EmptyState({
         </p>
       )}
       <p className="mt-4 text-xs text-soil-500">
-        Remote-capable practitioners serve growers anywhere — consider dropping
+        Remote-capable practitioners serve growers anywhere - consider dropping
         location-based filters and keeping “works remotely”.
       </p>
     </div>

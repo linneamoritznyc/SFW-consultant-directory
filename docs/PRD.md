@@ -1,11 +1,11 @@
-# Soil Food Web Practitioner Directory v2 — PRD
+# Soil Food Web Practitioner Directory v2 - PRD
 
 Status: Draft for discussion · Owner: TBD
 
-> **Addendum, 2026-08-23 — findings from the live site.** Open question #1 is
+> **Addendum, 2026-08-23 - findings from the live site.** Open question #1 is
 > answered: the live "Directory (NEW)" already implements a clustered
 > Leaflet/OSM map, role and country filters, free-text search over bios, and
-> profile cards — 178 records, with consultants and lab-techs in one
+> profile cards - 178 records, with consultants and lab-techs in one
 > interface. This changes the framing from *rebuild* to **enrichment**:
 >
 > - **§1 is partly stale.** "Lab-techs are invisible on a separate page" is
@@ -14,7 +14,7 @@ Status: Draft for discussion · Owner: TBD
 >   of the grower's problem (crop, soil, language, availability, remote).
 > - **§11 Phase 2 mostly exists** and should not be rebuilt. Phases 1
 >   (schema, vocabularies, ecoregion tagging), 3 (self-service, contact
->   relay — raw emails and phones are currently exposed on profile cards),
+>   relay - raw emails and phones are currently exposed on profile cards),
 >   4 (guided intake), and 5 (coverage analysis) all survive; none is
 >   possible with country-and-role data alone.
 > - **The data is unstructured, not missing.** Live bios are
@@ -25,12 +25,12 @@ Status: Draft for discussion · Owner: TBD
 >   propose structured tags against the controlled vocabularies, then have
 >   each practitioner confirm their own during a profile-review prompt.
 > - **Count discrepancy to ask about:** 178 live records vs ~350 certified
->   practitioners claimed in §1 — incomplete migration, or a wrong figure?
+>   practitioners claimed in §1 - incomplete migration, or a wrong figure?
 > - **Live roles are Lab-Tech / Consultant / Farmer** (at
 >   `/certified-listing-directory/`, Leaflet + OSM). The schema's
 >   `role_enum` already covers the third as `grower`. Profile modals expose
 >   raw email and phone (§8.2 applies verbatim), and search results give no
->   indication of *why* a record matched — e.g. "compost" returns 70 of
+>   indication of *why* a record matched - e.g. "compost" returns 70 of
 >   178 with no match explanation.
 >
 > One-line framing: the interface is done; the data underneath it isn't.
@@ -45,7 +45,7 @@ for lab-techs, which means finding the right person depends on reading
 everything and guessing. This rebuild restructures the same information into
 filterable fields covering role (consultant, lab-tech, or both), crops
 worked, soil and climate types, languages spoken, certification year, travel
-radius, remote availability, and whether they are currently taking clients —
+radius, remote availability, and whether they are currently taking clients -
 with multi-select filters that combine across categories, free-text search
 across names, locations and bios, and shareable URLs. Results sit alongside
 a clustered map with markers colour-coded by role, linked so that hovering a
@@ -88,7 +88,7 @@ existing bio content, which is preserved inside the richer profile.
 
 Core `practitioner` entity with stable slug, roles array, certifications
 jsonb, status, availability flags, travel radius, contact fields (never
-exposed raw — §8.2), PostGIS point location, and denormalised
+exposed raw - §8.2), PostGIS point location, and denormalised
 ecoregion/biome/realm IDs. See `db/migrations/0001_schema.sql` for the
 authoritative DDL.
 
@@ -99,7 +99,7 @@ with per-locale labels and synonyms in `vocabulary_term_i18n`. Hierarchy
 enables recall: query expansion goes down the tree, never up. Synonyms are
 search-time only, never selectable filter options.
 
-**Ecoregion tagging** (§4.3): RESOLVE Ecoregions 2017 (Dinerstein et al.) —
+**Ecoregion tagging** (§4.3): RESOLVE Ecoregions 2017 (Dinerstein et al.) -
 846 terrestrial ecoregions, 14 biomes, 8 realms. Political geography is a
 poor proxy for ecological similarity: southern Spain and coastal California
 share a Mediterranean biome across 9,000 km; two Chilean practitioners
@@ -109,32 +109,32 @@ nearest-polygon fallback for coastal points (flagged for review). Unlocks
 "find practitioners in an ecologically similar place", automatic coverage
 analysis by biome, and a verifiable reach claim. Caveat stated plainly in
 the UI: ecoregion is a biodiversity classification, not a soil
-classification — a coarse similarity signal, never a claim of soil
+classification - a coarse similarity signal, never a claim of soil
 equivalence. Soil-level matching later = FAO/HWSD as a separate field.
 
 **Junction tables** (§4.4): crop (with optional years experience), soil
-type, language (with `native | fluent | working` proficiency — a technical
+type, language (with `native | fluent | working` proficiency - a technical
 soil conversation is not small talk), practice.
 
 ## 5. Search architecture
 
-1. **Structured filters** — language-independent by construction; the
+1. **Structured filters** - language-independent by construction; the
    primary interaction.
-2. **Per-locale full-text** — one weighted tsvector per supported locale
+2. **Per-locale full-text** - one weighted tsvector per supported locale
    (name A, city/crops B, bio C); language-specific stemmers, because the
    English stemmer mangles Turkish.
-3. **Fuzzy fallback** — pg_trgm on name/city when full-text returns < 3
+3. **Fuzzy fallback** - pg_trgm on name/city when full-text returns < 3
    results ("Türkiye"/"Turkiye", "Göteborg"/"Gothenburg").
-4. **Query-time synonym expansion** — "viñedo" → term 47 → practitioners
+4. **Query-time synonym expansion** - "viñedo" → term 47 → practitioners
    tagged `vineyard` regardless of profile language.
 
 **Ranking** (§5.3): ecoregion match 0.30 · crop overlap 0.25 · language
 0.20 · accepting clients 0.15 · radius/remote 0.10. Certification recency
-and seniority deliberately excluded — ranking by seniority entrenches early
+and seniority deliberately excluded - ranking by seniority entrenches early
 cohorts and starves new graduates.
 
 **Facet counts** (§5.4): every option shows its count against currently
-applied filters — "Turkish (3)" before clicking, one GROUP BY, not N
+applied filters - "Turkish (3)" before clicking, one GROUP BY, not N
 queries.
 
 ## 6. Interface
@@ -164,7 +164,7 @@ internally, not hidden publicly.
   listing recorded with timestamp + terms version; self-service removal;
   documented retention policy. Certification and public listing are
   separate decisions, separately recorded.
-- No raw emails/phones published — server-side relay form, which also
+- No raw emails/phones published - server-side relay form, which also
   yields the first enquiry-volume data the organisation has had.
 - Migration note: the site currently mixes two legal entities (Foundation
   501(c)(3) in the footer, School LLC on the privacy policy). The data
@@ -173,7 +173,7 @@ internally, not hidden publicly.
 ## 9. Deliberate omissions
 
 No ratings/reviews at ~350 practitioners (statistically meaningless volume;
-one unfair one-star review damages a livelihood — revisit above 1,000 or
+one unfair one-star review damages a livelihood - revisit above 1,000 or
 replace with structured outcome data). No bidding (devalues the
 credential).
 
@@ -186,11 +186,11 @@ Vercel.
 
 ## 11. Phasing
 
-1. Schema, vocabularies, ecoregion ingest, data migration — 2 wk
-2. Public directory: filters, list, map, profiles, URL state — 3 wk
-3. Self-service editing, magic-link auth, contact relay — 2 wk
-4. Guided intake + matching explanations — 2 wk
-5. Internal coverage dashboard — 1 wk
+1. Schema, vocabularies, ecoregion ingest, data migration - 2 wk
+2. Public directory: filters, list, map, profiles, URL state - 3 wk
+3. Self-service editing, magic-link auth, contact relay - 2 wk
+4. Guided intake + matching explanations - 2 wk
+5. Internal coverage dashboard - 1 wk
 
 Phase 1 determines whether everything after it works. Resist starting with
 the map.

@@ -2,7 +2,7 @@ import type { Filters, Role } from "./types";
 import { EMPTY_FILTERS } from "./search";
 
 // URL as state (PRD §6.2). Every filter combination serialises to query
-// parameters — shareable, bookmarkable, back-button correct.
+// parameters - shareable, bookmarkable, back-button correct.
 // e.g. /directory?role=consultant&crop=vineyard,olive&lang=es&remote=true
 
 export function filtersToParams(f: Filters): URLSearchParams {

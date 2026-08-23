@@ -66,7 +66,7 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
         />
         <SummaryRow
           term="Ecoregion"
-          detail={`${p.ecoregion} — ${p.biome} (${p.realm})`}
+          detail={`${p.ecoregion} - ${p.biome} (${p.realm})`}
         />
         <SummaryRow
           term="Service area"
@@ -79,7 +79,7 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
         />
       </dl>
       <p className="mt-2 text-xs text-soil-500">
-        Ecoregion follows RESOLVE Ecoregions 2017 — a coarse ecological
+        Ecoregion follows RESOLVE Ecoregions 2017 - a coarse ecological
         similarity signal, not a statement of soil equivalence.
       </p>
 

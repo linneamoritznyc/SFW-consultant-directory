@@ -62,7 +62,7 @@ export function matchPractitioners(a: IntakeAnswers): Match[] {
       const w = lang.proficiency === "native" ? 1 : lang.proficiency === "fluent" ? 0.85 : 0.6;
       score += 0.2 * w;
       explanation.push(
-        `speaks ${label(lang.slug)} (${lang.proficiency}) — a technical soil conversation needs more than small talk`
+        `speaks ${label(lang.slug)} (${lang.proficiency}) - a technical soil conversation needs more than small talk`
       );
     }
 

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import DirectoryClient from "@/components/DirectoryClient";
 import { PRACTITIONERS } from "@/lib/data";
 
-export const metadata = { title: "Browse practitioners — Soil Food Web Directory" };
+export const metadata = { title: "Browse practitioners - Soil Food Web Directory" };
 
 export default function DirectoryPage() {
   // Server component hands the dataset to the client shell. In production this
