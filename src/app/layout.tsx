@@ -24,6 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Ecoregion labels follow RESOLVE Ecoregions 2017 (Dinerstein et al.).
               </span>
               <span className="flex gap-4">
+                <a
+                  href="https://soilfoodweb.com/"
+                  target="_blank"
+                  rel="noopener"
+                  className="font-medium hover:text-soil-900 hover:underline"
+                >
+                  soilfoodweb.com ↗
+                </a>
                 <Link href="/coverage" className="hover:text-soil-900 hover:underline">
                   Network coverage
                 </Link>

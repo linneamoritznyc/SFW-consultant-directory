@@ -144,6 +144,33 @@ export default function AboutPage() {
         </p>
       </Section>
 
+      <Section title="About the certification">
+        <p>
+          Every practitioner in this directory holds a certification from the
+          Soil Food Web School, founded on Dr. Elaine Ingham&apos;s research
+          into soil biology. The science, the courses, and the certification
+          programmes are documented on the official site.
+        </p>
+        <div className="flex flex-wrap gap-3 pt-1">
+          <a
+            href="https://soilfoodweb.com/"
+            target="_blank"
+            rel="noopener"
+            className="rounded-lg bg-leaf-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-leaf-700"
+          >
+            Visit soilfoodweb.com ↗
+          </a>
+          <a
+            href="https://soilfoodweb.com/certified-listing-directory/"
+            target="_blank"
+            rel="noopener"
+            className="rounded-lg border border-soil-300 bg-white px-5 py-2.5 text-sm font-medium text-soil-800 hover:bg-soil-100"
+          >
+            Official certified listing ↗
+          </a>
+        </div>
+      </Section>
+
       <p className="mt-12 text-sm text-soil-500">
         Ready?{" "}
         <Link href="/directory" className="text-leaf-700 hover:underline">

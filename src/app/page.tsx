@@ -30,6 +30,18 @@ export default function HomePage() {
           Answer 7 questions, get 3 matches
         </Link>
       </div>
+      <p className="mt-4 text-sm text-soil-600">
+        Every practitioner here is certified by the{" "}
+        <a
+          href="https://soilfoodweb.com/"
+          target="_blank"
+          rel="noopener"
+          className="font-medium text-leaf-700 hover:underline"
+        >
+          Soil Food Web School
+        </a>{" "}
+        - learn about the science and the courses at soilfoodweb.com ↗
+      </p>
       <dl className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
         {[
           [consultants, "Consultants"],

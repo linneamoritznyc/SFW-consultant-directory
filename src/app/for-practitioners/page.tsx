@@ -51,6 +51,22 @@ export default function ForPractitionersPage() {
           </li>
         </ul>
       </section>
+
+      <section className="mt-10 rounded-xl border border-soil-200 bg-white p-5">
+        <h2 className="text-lg font-semibold text-soil-900">Not certified yet?</h2>
+        <p className="mt-2 text-soil-700">
+          Listing here requires certification through the Soil Food Web
+          School&apos;s consultant or lab-tech programmes.
+        </p>
+        <a
+          href="https://soilfoodweb.com/"
+          target="_blank"
+          rel="noopener"
+          className="mt-3 inline-block rounded-lg bg-leaf-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-leaf-700"
+        >
+          Explore courses at soilfoodweb.com ↗
+        </a>
+      </section>
     </div>
   );
 }
