@@ -1,10 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { matchPractitioners, type IntakeAnswers, type Match } from "@/lib/matching";
-import { termsFor, BIOMES } from "@/lib/vocab";
+import { termsFor, synonymHits, BIOMES } from "@/lib/vocab";
 import RoleBadge from "./RoleBadge";
+
+const EcoregionPicker = dynamic(() => import("./EcoregionPicker"), {
+  ssr: false,
+  loading: () => (
+    <div className="mt-4 flex h-[340px] items-center justify-center rounded-xl border border-soil-200 bg-soil-100 text-sm text-soil-500">
+      Loading map…
+    </div>
+  ),
+});
+
+// Sentinel option values that open an inline widget instead of advancing.
+const PICK_ON_MAP = "__map__";
+const OTHER_FREE_TEXT = "__other__";
 
 // Guided intake (PRD §6.5): one question per screen, progress indicator,
 // back navigation that never loses answers. Output: three ranked matches with
@@ -22,24 +36,30 @@ const QUESTIONS: Question[] = [
     key: "biome",
     title: "Which best describes your region?",
     hint: "We match on ecological similarity, not distance - a grower in Andalusia and one in coastal California share more than either shares with a neighbour two climate zones away.",
-    options: BIOMES.map((b) => ({ value: b, label: b })),
+    options: [
+      ...BIOMES.map((b) => ({ value: b, label: b })),
+      { value: PICK_ON_MAP, label: "Don't know? Find your ecoregion on a map" },
+    ],
   },
   {
     key: "landSize",
     title: "How much land are you working?",
     options: [
       { value: "under_1", label: "Under 1 hectare" },
-      { value: "1_10", label: "1–10 hectares" },
-      { value: "10_100", label: "10–100 hectares" },
+      { value: "1_10", label: "1-10 hectares" },
+      { value: "10_100", label: "10-100 hectares" },
       { value: "over_100", label: "Over 100 hectares" },
     ],
   },
   {
     key: "crop",
     title: "What's your primary crop or system?",
-    options: termsFor("crop")
-      .filter((t) => !["perennial_fruit", "vine_fruit", "annual_row"].includes(t.slug))
-      .map((t) => ({ value: t.slug, label: t.label })),
+    options: [
+      ...termsFor("crop")
+        .filter((t) => !["perennial_fruit", "vine_fruit", "annual_row"].includes(t.slug))
+        .map((t) => ({ value: t.slug, label: t.label })),
+      { value: OTHER_FREE_TEXT, label: "Other - type your own" },
+    ],
   },
   {
     key: "problem",
@@ -81,15 +101,24 @@ export default function IntakeForm() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<IntakeAnswers>>({});
   const [matches, setMatches] = useState<Match[] | null>(null);
+  // Which sentinel widget (map picker / free-text) is open, if any.
+  const [widget, setWidget] = useState<string | null>(null);
+  const [otherText, setOtherText] = useState("");
 
   if (matches) {
-    return <Results matches={matches} onRestart={() => { setMatches(null); setStep(0); setAnswers({}); }} />;
+    return <Results matches={matches} onRestart={() => { setMatches(null); setStep(0); setAnswers({}); setWidget(null); setOtherText(""); }} />;
   }
 
   const q = QUESTIONS[step];
   const selected = answers[q.key];
 
   const advance = (value: string) => {
+    if (value === PICK_ON_MAP || value === OTHER_FREE_TEXT) {
+      setWidget(widget === value ? null : value);
+      return;
+    }
+    setWidget(null);
+    setOtherText("");
     const next = { ...answers, [q.key]: value };
     setAnswers(next);
     if (step < QUESTIONS.length - 1) {
@@ -97,6 +126,16 @@ export default function IntakeForm() {
     } else {
       setMatches(matchPractitioners(next as IntakeAnswers));
     }
+  };
+
+  // Free-text crop: try to resolve against the controlled vocabulary via
+  // synonym expansion ("viñedo" -> vineyard); otherwise carry the raw text
+  // (it simply won't earn crop-match points in ranking).
+  const submitOther = () => {
+    const text = otherText.trim();
+    if (!text) return;
+    const hit = synonymHits(text).find((t) => t.vocabulary === "crop");
+    advance(hit ? hit.slug : text.toLowerCase());
   };
 
   return (
@@ -125,7 +164,7 @@ export default function IntakeForm() {
             key={opt.value}
             onClick={() => advance(opt.value)}
             className={`block w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-              selected === opt.value
+              selected === opt.value || widget === opt.value
                 ? "border-leaf-600 bg-leaf-50 text-leaf-900"
                 : "border-soil-200 bg-white text-soil-800 hover:border-leaf-400 hover:bg-leaf-50"
             }`}
@@ -135,9 +174,52 @@ export default function IntakeForm() {
         ))}
       </div>
 
+      {widget === PICK_ON_MAP && (
+        <EcoregionPicker
+          onConfirm={(biomeName) => {
+            setWidget(null);
+            advance(biomeName);
+          }}
+        />
+      )}
+
+      {widget === OTHER_FREE_TEXT && (
+        <div className="mt-4 rounded-lg border border-soil-200 bg-white p-4">
+          <label className="text-sm text-soil-700" htmlFor="other-crop">
+            Describe your crop or system
+          </label>
+          <div className="mt-2 flex gap-2">
+            <input
+              id="other-crop"
+              autoFocus
+              value={otherText}
+              onChange={(e) => setOtherText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submitOther()}
+              placeholder="e.g. hazelnuts, hops, viñedo…"
+              className="flex-1 rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
+            />
+            <button
+              onClick={submitOther}
+              disabled={!otherText.trim()}
+              className="rounded-lg bg-leaf-600 px-4 py-2 text-sm font-medium text-white hover:bg-leaf-700 disabled:opacity-50"
+            >
+              Continue
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-soil-500">
+            Any language works - we match it against our crop vocabulary where
+            we can.
+          </p>
+        </div>
+      )}
+
       {step > 0 && (
         <button
-          onClick={() => setStep(step - 1)}
+          onClick={() => {
+            setWidget(null);
+            setOtherText("");
+            setStep(step - 1);
+          }}
           className="mt-4 text-sm text-soil-600 hover:text-soil-900 hover:underline"
         >
           ← Back

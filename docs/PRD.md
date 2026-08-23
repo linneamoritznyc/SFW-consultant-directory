@@ -148,7 +148,7 @@ queries.
   relaxations with counts. Never a blank page.
 - **Profile** (§6.4): header, structured summary, the existing bio
   unabridged, case study links, contact via form.
-- **Guided intake** (§6.5): 6–8 questions, one per screen, back without
+- **Guided intake** (§6.5): 6-8 questions, one per screen, back without
   losing answers → three ranked practitioners with plain-language
   explanations. The explanation matters more than the ranking.
 

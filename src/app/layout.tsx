@@ -24,6 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/intake" className="hover:text-white">
                 Get matched
               </Link>
+              <Link href="/about" className="hover:text-white">
+                More information
+              </Link>
             </nav>
           </div>
         </header>

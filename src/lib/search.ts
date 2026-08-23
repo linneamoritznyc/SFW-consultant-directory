@@ -32,7 +32,7 @@ export function similarity(a: string, b: string): number {
   return shared / (ta.size + tb.size - shared);
 }
 
-// --- Free-text matching (layers 2–4) ---------------------------------------
+// --- Free-text matching (layers 2-4) ---------------------------------------
 function textMatches(p: Practitioner, q: string): boolean {
   const query = q.toLowerCase().trim();
   if (!query) return true;

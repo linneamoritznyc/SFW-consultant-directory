@@ -4,6 +4,7 @@ import { PRACTITIONERS, bySlug } from "@/lib/data";
 import { label } from "@/lib/vocab";
 import RoleBadge from "@/components/RoleBadge";
 import ContactForm from "@/components/ContactForm";
+import ProfileMapSection from "@/components/ProfileMapSection";
 
 export function generateStaticParams() {
   return PRACTITIONERS.map((p) => ({ slug: p.slug }));
@@ -49,6 +50,11 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
           )}
         </div>
       </header>
+
+      {/* Location, travel radius, and live RESOLVE ecoregion overlay */}
+      <div className="mt-6">
+        <ProfileMapSection practitioner={p} />
+      </div>
 
       {/* Structured summary */}
       <dl className="mt-6 grid grid-cols-1 gap-4 rounded-xl border border-soil-200 bg-white p-5 sm:grid-cols-2">

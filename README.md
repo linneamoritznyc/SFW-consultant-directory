@@ -88,7 +88,7 @@ npm run typecheck
 3. **Phase 3** - magic-link auth (Supabase Auth), practitioner self-service
    editing, wire `/api/contact` to a transactional email provider and the
    `enquiry` table
-4. **Phase 4–5** - intake persistence, internal coverage dashboard
+4. **Phase 4-5** - intake persistence, internal coverage dashboard
    (`coverage_by_biome` view is already in place)
 
 ## Open questions carried from the PRD
