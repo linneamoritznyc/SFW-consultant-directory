@@ -63,6 +63,14 @@ export default function PractitionerCard({ result, highlighted, onHover, cardRef
             Remote
           </span>
         )}
+        {p.acceptsSamples && (
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-800">
+            Samples by post
+          </span>
+        )}
+        <span className="rounded-full bg-soil-100 px-2 py-0.5 text-soil-600">
+          Fees: {p.feeBand}
+        </span>
         {p.travelRadiusKm ? (
           <span className="rounded-full bg-soil-100 px-2 py-0.5 text-soil-600">
             Travels {p.travelRadiusKm} km

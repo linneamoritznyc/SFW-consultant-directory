@@ -31,8 +31,13 @@ export interface Practitioner {
   certifications: Certification[];
   certifiedSince: number;
   acceptingClients: boolean;
-  servicesRemotely: boolean;
+  servicesRemotely: boolean; // remote advising (calls, programme guidance)
+  acceptsSamples: boolean; // shipped-sample analysis - distinct from advising
   travelRadiusKm: number | null;
+  // Scale of operations worked, as land-size bands matching the intake
+  // question: under_1 | 1_10 | 10_100 | over_100 (hectares)
+  scaleBands: string[];
+  feeBand: "low" | "mid" | "high";
   city: string;
   adminArea: string;
   countryCode: string;

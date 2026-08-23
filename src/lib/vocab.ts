@@ -106,6 +106,19 @@ export function synonymHits(token: string): VocabTerm[] {
   );
 }
 
+export const SCALE_LABELS: Record<string, string> = {
+  under_1: "under 1 ha",
+  "1_10": "1-10 ha",
+  "10_100": "10-100 ha",
+  over_100: "100+ ha",
+};
+
+export const FEE_LABELS: Record<string, string> = {
+  low: "Lower fee band",
+  mid: "Mid fee band",
+  high: "Premium fee band",
+};
+
 export const BIOMES = [
   "Mediterranean Forests, Woodlands & Scrub",
   "Temperate Broadleaf & Mixed Forests",

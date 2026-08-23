@@ -16,7 +16,9 @@ const TGR = "Tropical & Subtropical Grasslands, Savannas & Shrublands";
 const DXS = "Deserts & Xeric Shrublands";
 const BOR = "Boreal Forests/Taiga";
 
-export const PRACTITIONERS: Practitioner[] = [
+type BaseRecord = Omit<Practitioner, "acceptsSamples" | "scaleBands" | "feeBand">;
+
+const BASE: BaseRecord[] = [
   {
     id: "p01", slug: "elena-vasquez", displayName: "Elena Vásquez",
     roles: ["consultant"], certifications: [{ program: "CC", year: 2019 }], certifiedSince: 2019,
@@ -260,6 +262,47 @@ export const PRACTITIONERS: Practitioner[] = [
     bio: "Will services Canterbury's mixed arable and dairy operations plus Waipara vineyards, driving the length of the South Island for sampling rounds each season.",
   },
 ];
+
+// Service-shape and scale fields (personas: due-diligence buyers need scale
+// worked and fee transparency; smallholders need to know who takes shipped
+// samples). In production these are practitioner-confirmed fields; here they
+// are merged onto the base demo records.
+const EXTRAS: Record<
+  string,
+  { acceptsSamples: boolean; scaleBands: string[]; feeBand: "low" | "mid" | "high" }
+> = {
+  p01: { acceptsSamples: false, scaleBands: ["1_10", "10_100"], feeBand: "mid" },
+  p02: { acceptsSamples: true, scaleBands: ["1_10", "10_100"], feeBand: "low" },
+  p03: { acceptsSamples: false, scaleBands: ["10_100", "over_100"], feeBand: "high" },
+  p04: { acceptsSamples: true, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p05: { acceptsSamples: false, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p06: { acceptsSamples: true, scaleBands: ["10_100", "over_100"], feeBand: "mid" },
+  p07: { acceptsSamples: false, scaleBands: ["10_100", "over_100"], feeBand: "high" },
+  p08: { acceptsSamples: true, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p09: { acceptsSamples: true, scaleBands: ["1_10", "10_100"], feeBand: "low" },
+  p10: { acceptsSamples: false, scaleBands: ["1_10", "10_100"], feeBand: "low" },
+  p11: { acceptsSamples: false, scaleBands: ["10_100", "over_100"], feeBand: "mid" },
+  p12: { acceptsSamples: true, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p13: { acceptsSamples: true, scaleBands: ["10_100", "over_100"], feeBand: "low" },
+  p14: { acceptsSamples: true, scaleBands: ["1_10"], feeBand: "low" },
+  p15: { acceptsSamples: false, scaleBands: ["10_100", "over_100"], feeBand: "mid" },
+  p16: { acceptsSamples: true, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p17: { acceptsSamples: false, scaleBands: ["10_100"], feeBand: "low" },
+  p18: { acceptsSamples: false, scaleBands: ["1_10", "10_100"], feeBand: "mid" },
+  p19: { acceptsSamples: true, scaleBands: ["under_1", "1_10"], feeBand: "low" },
+  p20: { acceptsSamples: true, scaleBands: ["1_10", "10_100"], feeBand: "low" },
+  p21: { acceptsSamples: true, scaleBands: ["10_100", "over_100"], feeBand: "mid" },
+  p22: { acceptsSamples: false, scaleBands: ["10_100", "over_100"], feeBand: "low" },
+};
+
+export const PRACTITIONERS: Practitioner[] = BASE.map((p) => ({
+  ...p,
+  ...(EXTRAS[p.id] ?? { acceptsSamples: false, scaleBands: [], feeBand: "mid" as const }),
+}));
+
+// Certification verification target. The demo links to the certifying body's
+// public listing; production would link a per-certificate verification page.
+export const VERIFY_URL = "https://soilfoodweb.com/certified-listing-directory/";
 
 export function bySlug(slug: string): Practitioner | undefined {
   return PRACTITIONERS.find((p) => p.slug === slug);

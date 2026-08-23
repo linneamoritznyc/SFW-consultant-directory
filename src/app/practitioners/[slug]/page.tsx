@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PRACTITIONERS, bySlug } from "@/lib/data";
-import { label } from "@/lib/vocab";
+import { PRACTITIONERS, VERIFY_URL, bySlug } from "@/lib/data";
+import { label, FEE_LABELS, SCALE_LABELS } from "@/lib/vocab";
 import RoleBadge from "@/components/RoleBadge";
 import ContactForm from "@/components/ContactForm";
 import ProfileMapSection from "@/components/ProfileMapSection";
@@ -37,7 +37,16 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
           <p className="text-xs text-soil-500">
             {p.certifications
               .map((c) => `${c.program} certified ${c.year}`)
-              .join(" · ")}
+              .join(" · ")}{" "}
+            ·{" "}
+            <a
+              href={VERIFY_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="text-leaf-700 hover:underline"
+            >
+              Verify
+            </a>
           </p>
           {p.acceptingClients ? (
             <span className="rounded-full bg-leaf-100 px-2.5 py-0.5 text-xs font-medium text-leaf-800">
@@ -78,10 +87,22 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
           term="Service area"
           detail={[
             p.travelRadiusKm ? `Travels up to ${p.travelRadiusKm} km` : null,
-            p.servicesRemotely ? "Works remotely worldwide" : null,
+            p.servicesRemotely ? "Advises remotely worldwide" : null,
+            p.acceptsSamples ? "Accepts shipped soil samples" : null,
           ]
             .filter(Boolean)
             .join(" · ") || "On-site only"}
+        />
+        <SummaryRow
+          term="Scale of operations worked"
+          detail={
+            p.scaleBands.map((s) => SCALE_LABELS[s] ?? s).join(", ") ||
+            "Not specified"
+          }
+        />
+        <SummaryRow
+          term="Fees"
+          detail={`${FEE_LABELS[p.feeBand]} - see how fee bands work on the More Information page`}
         />
       </dl>
       <p className="mt-2 text-xs text-soil-500">

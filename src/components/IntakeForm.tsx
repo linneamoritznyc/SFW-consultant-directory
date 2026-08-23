@@ -5,24 +5,26 @@ import Link from "next/link";
 import { useState } from "react";
 import { matchPractitioners, type IntakeAnswers, type Match } from "@/lib/matching";
 import { termsFor, synonymHits, BIOMES } from "@/lib/vocab";
+import { useLocale } from "./LocaleProvider";
 import RoleBadge from "./RoleBadge";
 
 const EcoregionPicker = dynamic(() => import("./EcoregionPicker"), {
   ssr: false,
   loading: () => (
     <div className="mt-4 flex h-[340px] items-center justify-center rounded-xl border border-soil-200 bg-soil-100 text-sm text-soil-500">
-      Loading map…
+      …
     </div>
   ),
 });
 
+// Guided intake (PRD §6.5): one question per screen, progress indicator,
+// back navigation that never loses answers. Output: three ranked matches with
+// plain-language explanations. UI strings localize via LocaleProvider;
+// vocabulary slugs and biome values stay stable underneath.
+
 // Sentinel option values that open an inline widget instead of advancing.
 const PICK_ON_MAP = "__map__";
 const OTHER_FREE_TEXT = "__other__";
-
-// Guided intake (PRD §6.5): one question per screen, progress indicator,
-// back navigation that never loses answers. Output: three ranked matches with
-// plain-language explanations.
 
 interface Question {
   key: keyof IntakeAnswers;
@@ -31,73 +33,8 @@ interface Question {
   options: { value: string; label: string }[];
 }
 
-const QUESTIONS: Question[] = [
-  {
-    key: "biome",
-    title: "Which best describes your region?",
-    hint: "We match on ecological similarity, not distance - a grower in Andalusia and one in coastal California share more than either shares with a neighbour two climate zones away.",
-    options: [
-      ...BIOMES.map((b) => ({ value: b, label: b })),
-      { value: PICK_ON_MAP, label: "Don't know? Find your ecoregion on a map" },
-    ],
-  },
-  {
-    key: "landSize",
-    title: "How much land are you working?",
-    options: [
-      { value: "under_1", label: "Under 1 hectare" },
-      { value: "1_10", label: "1-10 hectares" },
-      { value: "10_100", label: "10-100 hectares" },
-      { value: "over_100", label: "Over 100 hectares" },
-    ],
-  },
-  {
-    key: "crop",
-    title: "What's your primary crop or system?",
-    options: [
-      ...termsFor("crop")
-        .filter((t) => !["perennial_fruit", "vine_fruit", "annual_row"].includes(t.slug))
-        .map((t) => ({ value: t.slug, label: t.label })),
-      { value: OTHER_FREE_TEXT, label: "Other - type your own" },
-    ],
-  },
-  {
-    key: "problem",
-    title: "What's the main problem you're trying to solve?",
-    options: [
-      { value: "fertility", label: "Fertility / declining yields" },
-      { value: "disease", label: "Disease or pest pressure" },
-      { value: "compaction", label: "Compaction / poor water infiltration" },
-      { value: "transition", label: "Transitioning to organic / regenerative" },
-      { value: "other", label: "Something else" },
-    ],
-  },
-  {
-    key: "mode",
-    title: "On-site visits, or remote?",
-    options: [
-      { value: "onsite", label: "I want someone who can visit" },
-      { value: "remote", label: "Remote is fine" },
-      { value: "either", label: "Either works" },
-    ],
-  },
-  {
-    key: "language",
-    title: "Which language do you prefer to work in?",
-    options: termsFor("language").map((t) => ({ value: t.slug, label: t.label })),
-  },
-  {
-    key: "timeline",
-    title: "When do you want to start?",
-    options: [
-      { value: "now", label: "As soon as possible" },
-      { value: "season", label: "Before next season" },
-      { value: "exploring", label: "Just exploring for now" },
-    ],
-  },
-];
-
 export default function IntakeForm() {
+  const { t, termLabel, biomeLabel } = useLocale();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<IntakeAnswers>>({});
   const [matches, setMatches] = useState<Match[] | null>(null);
@@ -105,8 +42,88 @@ export default function IntakeForm() {
   const [widget, setWidget] = useState<string | null>(null);
   const [otherText, setOtherText] = useState("");
 
+  const QUESTIONS: Question[] = [
+    {
+      key: "biome",
+      title: t("q_biome"),
+      hint: t("q_biome_hint"),
+      options: [
+        ...BIOMES.map((b) => ({ value: b, label: biomeLabel(b) })),
+        { value: PICK_ON_MAP, label: t("q_biome_map") },
+      ],
+    },
+    {
+      key: "landSize",
+      title: t("q_land"),
+      options: [
+        { value: "under_1", label: t("land_under_1") },
+        { value: "1_10", label: t("land_1_10") },
+        { value: "10_100", label: t("land_10_100") },
+        { value: "over_100", label: t("land_over_100") },
+      ],
+    },
+    {
+      key: "crop",
+      title: t("q_crop"),
+      options: [
+        ...termsFor("crop")
+          .filter((tm) => !["perennial_fruit", "vine_fruit", "annual_row"].includes(tm.slug))
+          .map((tm) => ({ value: tm.slug, label: termLabel(tm.slug) })),
+        { value: OTHER_FREE_TEXT, label: t("crop_other") },
+      ],
+    },
+    {
+      key: "problem",
+      title: t("q_problem"),
+      options: [
+        { value: "fertility", label: t("prob_fertility") },
+        { value: "disease", label: t("prob_disease") },
+        { value: "compaction", label: t("prob_compaction") },
+        { value: "transition", label: t("prob_transition") },
+        { value: "other", label: t("prob_other") },
+      ],
+    },
+    {
+      key: "mode",
+      title: t("q_mode"),
+      options: [
+        { value: "onsite", label: t("mode_onsite") },
+        { value: "remote", label: t("mode_remote") },
+        { value: "either", label: t("mode_either") },
+      ],
+    },
+    {
+      key: "language",
+      title: t("q_lang"),
+      options: termsFor("language").map((tm) => ({
+        value: tm.slug,
+        label: termLabel(tm.slug),
+      })),
+    },
+    {
+      key: "timeline",
+      title: t("q_timeline"),
+      options: [
+        { value: "now", label: t("time_now") },
+        { value: "season", label: t("time_season") },
+        { value: "exploring", label: t("time_exploring") },
+      ],
+    },
+  ];
+
   if (matches) {
-    return <Results matches={matches} onRestart={() => { setMatches(null); setStep(0); setAnswers({}); setWidget(null); setOtherText(""); }} />;
+    return (
+      <Results
+        matches={matches}
+        onRestart={() => {
+          setMatches(null);
+          setStep(0);
+          setAnswers({});
+          setWidget(null);
+          setOtherText("");
+        }}
+      />
+    );
   }
 
   const q = QUESTIONS[step];
@@ -134,116 +151,116 @@ export default function IntakeForm() {
   const submitOther = () => {
     const text = otherText.trim();
     if (!text) return;
-    const hit = synonymHits(text).find((t) => t.vocabulary === "crop");
+    const hit = synonymHits(text).find((tm) => tm.vocabulary === "crop");
     advance(hit ? hit.slug : text.toLowerCase());
   };
 
   return (
-    <div className="mt-6">
-      {/* Progress */}
-      <div className="mb-6 flex items-center gap-1">
-        {QUESTIONS.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 flex-1 rounded-full ${
-              i < step ? "bg-leaf-600" : i === step ? "bg-leaf-300" : "bg-soil-200"
-            }`}
-          />
-        ))}
-        <span className="ml-2 text-xs tabular-nums text-soil-500">
-          {step + 1}/{QUESTIONS.length}
-        </span>
-      </div>
+    <div>
+      <h1 className="text-2xl font-semibold text-soil-900">{t("intake_h1")}</h1>
+      <p className="mt-1 text-sm text-soil-600">{t("intake_sub")}</p>
 
-      <h2 className="text-lg font-semibold text-soil-900">{q.title}</h2>
-      {q.hint && <p className="mt-1 text-xs text-soil-500">{q.hint}</p>}
-
-      <div className="mt-4 space-y-2">
-        {q.options.map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => advance(opt.value)}
-            className={`block w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-              selected === opt.value || widget === opt.value
-                ? "border-leaf-600 bg-leaf-50 text-leaf-900"
-                : "border-soil-200 bg-white text-soil-800 hover:border-leaf-400 hover:bg-leaf-50"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-
-      {widget === PICK_ON_MAP && (
-        <EcoregionPicker
-          onConfirm={(biomeName) => {
-            setWidget(null);
-            advance(biomeName);
-          }}
-        />
-      )}
-
-      {widget === OTHER_FREE_TEXT && (
-        <div className="mt-4 rounded-lg border border-soil-200 bg-white p-4">
-          <label className="text-sm text-soil-700" htmlFor="other-crop">
-            Describe your crop or system
-          </label>
-          <div className="mt-2 flex gap-2">
-            <input
-              id="other-crop"
-              autoFocus
-              value={otherText}
-              onChange={(e) => setOtherText(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && submitOther()}
-              placeholder="e.g. hazelnuts, hops, viñedo…"
-              className="flex-1 rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
+      <div className="mt-6">
+        {/* Progress */}
+        <div className="mb-6 flex items-center gap-1">
+          {QUESTIONS.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 flex-1 rounded-full ${
+                i < step ? "bg-leaf-600" : i === step ? "bg-leaf-300" : "bg-soil-200"
+              }`}
             />
-            <button
-              onClick={submitOther}
-              disabled={!otherText.trim()}
-              className="rounded-lg bg-leaf-600 px-4 py-2 text-sm font-medium text-white hover:bg-leaf-700 disabled:opacity-50"
-            >
-              Continue
-            </button>
-          </div>
-          <p className="mt-2 text-xs text-soil-500">
-            Any language works - we match it against our crop vocabulary where
-            we can.
-          </p>
+          ))}
+          <span className="ml-2 text-xs tabular-nums text-soil-500">
+            {step + 1}/{QUESTIONS.length}
+          </span>
         </div>
-      )}
 
-      {step > 0 && (
-        <button
-          onClick={() => {
-            setWidget(null);
-            setOtherText("");
-            setStep(step - 1);
-          }}
-          className="mt-4 text-sm text-soil-600 hover:text-soil-900 hover:underline"
-        >
-          ← Back
-        </button>
-      )}
+        <h2 className="text-lg font-semibold text-soil-900">{q.title}</h2>
+        {q.hint && <p className="mt-1 text-xs text-soil-500">{q.hint}</p>}
+
+        <div className="mt-4 space-y-2">
+          {q.options.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => advance(opt.value)}
+              className={`block w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
+                selected === opt.value || widget === opt.value
+                  ? "border-leaf-600 bg-leaf-50 text-leaf-900"
+                  : "border-soil-200 bg-white text-soil-800 hover:border-leaf-400 hover:bg-leaf-50"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
+        {widget === PICK_ON_MAP && (
+          <EcoregionPicker
+            onConfirm={(biomeName) => {
+              setWidget(null);
+              advance(biomeName);
+            }}
+          />
+        )}
+
+        {widget === OTHER_FREE_TEXT && (
+          <div className="mt-4 rounded-lg border border-soil-200 bg-white p-4">
+            <label className="text-sm text-soil-700" htmlFor="other-crop">
+              {t("other_label")}
+            </label>
+            <div className="mt-2 flex gap-2">
+              <input
+                id="other-crop"
+                autoFocus
+                value={otherText}
+                onChange={(e) => setOtherText(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && submitOther()}
+                placeholder={t("other_placeholder")}
+                className="flex-1 rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
+              />
+              <button
+                onClick={submitOther}
+                disabled={!otherText.trim()}
+                className="rounded-lg bg-leaf-600 px-4 py-2 text-sm font-medium text-white hover:bg-leaf-700 disabled:opacity-50"
+              >
+                {t("continue")}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-soil-500">{t("other_hint")}</p>
+          </div>
+        )}
+
+        {step > 0 && (
+          <button
+            onClick={() => {
+              setWidget(null);
+              setOtherText("");
+              setStep(step - 1);
+            }}
+            className="mt-4 text-sm text-soil-600 hover:text-soil-900 hover:underline"
+          >
+            {t("back")}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
 function Results({ matches, onRestart }: { matches: Match[]; onRestart: () => void }) {
+  const { t } = useLocale();
   return (
     <div className="mt-6">
       <h2 className="text-lg font-semibold text-soil-900">
-        {matches.length > 0
-          ? `Your ${matches.length} closest match${matches.length === 1 ? "" : "es"}`
-          : "No close matches"}
+        {matches.length > 0 ? t("results_some") : t("results_none")}
       </h2>
       {matches.length === 0 && (
         <p className="mt-2 text-sm text-soil-600">
-          Nobody in the network fits those answers closely. Try{" "}
+          {t("results_none_body")}{" "}
           <Link href="/directory?remote=true" className="text-leaf-700 hover:underline">
-            browsing remote-capable practitioners
-          </Link>{" "}
-          - many advise growers far outside their own region.
+            {t("results_browse_remote")}
+          </Link>
         </p>
       )}
       <div className="mt-4 space-y-4">
@@ -269,14 +286,14 @@ function Results({ matches, onRestart }: { matches: Match[]; onRestart: () => vo
               </div>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-soil-700">
-              <strong className="text-soil-900">Matched because they</strong>{" "}
+              <strong className="text-soil-900">{t("matched_because")}</strong>{" "}
               {m.explanation.join("; ")}.
             </p>
             <Link
               href={`/practitioners/${m.practitioner.slug}`}
               className="mt-3 inline-block rounded-lg bg-leaf-600 px-4 py-2 text-sm font-medium text-white hover:bg-leaf-700"
             >
-              View profile & contact
+              {t("view_profile")}
             </Link>
           </div>
         ))}
@@ -285,7 +302,7 @@ function Results({ matches, onRestart }: { matches: Match[]; onRestart: () => vo
         onClick={onRestart}
         className="mt-6 text-sm text-soil-600 hover:text-soil-900 hover:underline"
       >
-        Start over
+        {t("start_over")}
       </button>
     </div>
   );

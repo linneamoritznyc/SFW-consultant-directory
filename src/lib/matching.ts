@@ -73,7 +73,11 @@ export function matchPractitioners(a: IntakeAnswers): Match[] {
 
     if (a.mode === "remote" && p.servicesRemotely) {
       score += 0.1;
-      explanation.push("offers fully remote consultations");
+      explanation.push(
+        p.acceptsSamples
+          ? "offers fully remote consultations and accepts shipped soil samples"
+          : "offers fully remote consultations"
+      );
     } else if (a.mode === "onsite" && !p.servicesRemotely && !sameBiome) {
       score -= 0.2; // wants on-site, practitioner neither nearby-ish nor remote
     } else if (p.servicesRemotely) {
@@ -87,6 +91,13 @@ export function matchPractitioners(a: IntakeAnswers): Match[] {
       explanation.push(
         `their practice focus (${practiceHit.map(label).join(", ").toLowerCase()}) fits your stated problem`
       );
+    }
+
+    // Scale familiarity: a 900 ha citrus operation and a 1 ha market garden
+    // are different jobs even on the same crop.
+    if (p.scaleBands.includes(a.landSize)) {
+      score += 0.05;
+      explanation.push("has worked operations at your scale");
     }
 
     // Lab-techs are the cheaper entry point; nudge them up for assessment-type

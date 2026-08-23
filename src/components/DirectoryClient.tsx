@@ -87,10 +87,13 @@ export default function DirectoryClient({
             className="w-full rounded-lg border border-soil-300 bg-white px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
           />
         </div>
-        <p className="mb-3 text-sm text-soil-600">
-          {results.length} practitioner{results.length === 1 ? "" : "s"}
-          {filters.q ? ` matching “${filters.q}”` : ""}
-        </p>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <p className="text-sm text-soil-600">
+            {results.length} practitioner{results.length === 1 ? "" : "s"}
+            {filters.q ? ` matching “${filters.q}”` : ""}
+          </p>
+          <CopyLinkButton />
+        </div>
 
         {results.length === 0 ? (
           <EmptyState nearest={nearest} filters={filters} />
@@ -122,6 +125,26 @@ export default function DirectoryClient({
         />
       </section>
     </div>
+  );
+}
+
+// Every filter combination lives in the URL, so sharing a filtered view is
+// just sharing the address - this button makes that discoverable.
+function CopyLinkButton() {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } catch {}
+      }}
+      className="shrink-0 rounded-lg border border-soil-300 bg-white px-3 py-1.5 text-xs font-medium text-soil-700 hover:bg-soil-100"
+    >
+      {copied ? "Copied!" : "Copy link to this view"}
+    </button>
   );
 }
 

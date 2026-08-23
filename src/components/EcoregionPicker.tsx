@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import { lookupEcoregion, osmBasemap, type EcoregionHit } from "@/lib/ecoregion";
+import { useLocale } from "./LocaleProvider";
 
 // "Don't know your ecoregion?" - click anywhere on the map and the RESOLVE
 // 2017 dataset (846 ecoregions) resolves the ecoregion and biome for that
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function EcoregionPicker({ onConfirm }: Props) {
+  const { t } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -77,23 +79,16 @@ export default function EcoregionPicker({ onConfirm }: Props) {
 
   return (
     <div className="mt-4">
-      <p className="mb-2 text-sm text-soil-600">
-        Click your location on the map - we&apos;ll look up your ecoregion in
-        the RESOLVE 2017 dataset (846 ecoregions worldwide).
-      </p>
+      <p className="mb-2 text-sm text-soil-600">{t("picker_hint")}</p>
       <div className="overflow-hidden rounded-xl border border-soil-200">
         <div ref={containerRef} className="h-[340px] w-full" />
       </div>
 
       {state.phase === "loading" && (
-        <p className="mt-3 text-sm text-soil-500">Looking up your ecoregion…</p>
+        <p className="mt-3 text-sm text-soil-500">{t("picker_loading")}</p>
       )}
       {state.phase === "failed" && (
-        <p className="mt-3 text-sm text-clay-600">
-          Couldn&apos;t resolve an ecoregion there (open water, or the service
-          is unreachable). Try clicking on land, or pick a region from the
-          list above.
-        </p>
+        <p className="mt-3 text-sm text-clay-600">{t("picker_failed")}</p>
       )}
       {state.phase === "resolved" && (
         <div className="mt-3 rounded-lg border border-leaf-200 bg-leaf-50 p-4">
@@ -107,7 +102,7 @@ export default function EcoregionPicker({ onConfirm }: Props) {
             onClick={() => onConfirm(state.hit.biomeName, state.hit.ecoName)}
             className="mt-3 rounded-lg bg-leaf-600 px-4 py-2 text-sm font-medium text-white hover:bg-leaf-700"
           >
-            Use this region
+            {t("picker_use")}
           </button>
         </div>
       )}

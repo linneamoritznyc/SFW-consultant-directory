@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "./LocaleProvider";
 
 export default function ContactForm({ practitionerSlug }: { practitionerSlug: string }) {
+  const { t } = useLocale();
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -32,26 +34,26 @@ export default function ContactForm({ practitionerSlug }: { practitionerSlug: st
   if (status === "sent") {
     return (
       <p className="mt-3 rounded-lg bg-leaf-50 p-4 text-sm text-leaf-800">
-        Your message has been relayed. The practitioner will reply to the email
-        address you provided.
+        {t("contact_sent")}
       </p>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="mt-3 space-y-3">
+      <p className="text-xs text-soil-500">{t("contact_lang_note")}</p>
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           name="name"
           required
-          placeholder="Your name"
+          placeholder={t("contact_name")}
           className="rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
         />
         <input
           name="email"
           type="email"
           required
-          placeholder="Your email"
+          placeholder={t("contact_email")}
           className="rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
         />
       </div>
@@ -59,7 +61,7 @@ export default function ContactForm({ practitionerSlug }: { practitionerSlug: st
         name="message"
         required
         rows={4}
-        placeholder="Describe your land, your crop, and what you're seeing…"
+        placeholder={t("contact_msg")}
         className="w-full rounded-lg border border-soil-300 px-3 py-2 text-sm focus:border-leaf-500 focus:outline-none"
       />
       <button
@@ -67,12 +69,10 @@ export default function ContactForm({ practitionerSlug }: { practitionerSlug: st
         disabled={status === "sending"}
         className="rounded-lg bg-leaf-600 px-5 py-2 text-sm font-medium text-white hover:bg-leaf-700 disabled:opacity-50"
       >
-        {status === "sending" ? "Sending…" : "Send enquiry"}
+        {status === "sending" ? t("contact_sending") : t("contact_send")}
       </button>
       {status === "error" && (
-        <p className="text-sm text-clay-600">
-          Something went wrong - please try again.
-        </p>
+        <p className="text-sm text-clay-600">{t("contact_error")}</p>
       )}
     </form>
   );

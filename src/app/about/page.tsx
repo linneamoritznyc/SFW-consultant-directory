@@ -53,6 +53,54 @@ export default function AboutPage() {
         </p>
       </Section>
 
+      <Section title="How an assessment works">
+        <p>
+          You do not always need a practitioner nearby. Many lab-techs accept
+          shipped samples - look for the &quot;Samples by post&quot; badge:
+        </p>
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>
+            <strong className="text-soil-900">Contact the lab-tech</strong>{" "}
+            through their profile. They send you a simple sampling protocol:
+            where on your land to sample, how deep, and how to pack and ship
+            so the organisms survive the journey.
+          </li>
+          <li>
+            <strong className="text-soil-900">Ship your sample</strong>{" "}
+            (typically a few hundred grams, posted early in the week so it
+            does not sit in transit over a weekend).
+          </li>
+          <li>
+            <strong className="text-soil-900">They assess it</strong> under a
+            microscope: bacterial and fungal biomass, protozoa, nematodes, and
+            the balance between them for your crop type.
+          </li>
+          <li>
+            <strong className="text-soil-900">You get a report</strong> in
+            plain language: what is present, what is missing, and what that
+            means - often with a video call to walk through it.
+          </li>
+        </ol>
+        <p>
+          If the report calls for a full programme, that is the moment to
+          engage a consultant - with data in hand instead of guesswork.
+        </p>
+      </Section>
+
+      <Section title="What does it cost?">
+        <p>
+          Prices are set by each practitioner and vary by region, so we show a
+          relative <strong className="text-soil-900">fee band</strong> on every
+          profile instead of exact figures: <em>lower</em>, <em>mid</em>, or{" "}
+          <em>premium</em> for their kind of service. As a rule of thumb, a
+          single lab assessment is the most affordable way in - a fraction of
+          the cost of an advisory engagement - and many practitioners offer a
+          short introductory call at no charge. Always confirm the actual
+          price with the practitioner before committing; the enquiry form is
+          exactly for that.
+        </p>
+      </Section>
+
       <Section title="How matching works">
         <p>
           Every profile carries structured fields - crops worked, soil types,
