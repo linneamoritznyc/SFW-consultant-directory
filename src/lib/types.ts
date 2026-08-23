@@ -38,6 +38,11 @@ export interface Practitioner {
   // question: under_1 | 1_10 | 10_100 | over_100 (hectares)
   scaleBands: string[];
   feeBand: "low" | "mid" | "high";
+  // Self-maintained profile depth (practitioner uploads these in production):
+  yearsExperience: number;
+  approach: string; // "how I work" in their own words
+  services: { name: string; description: string }[];
+  caseStudies?: { title: string; summary: string }[];
   city: string;
   adminArea: string;
   countryCode: string;

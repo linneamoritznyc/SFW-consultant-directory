@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LOCALES } from "@/lib/i18n";
 import { useLocale } from "./LocaleProvider";
 
 export default function Header() {
@@ -22,13 +23,21 @@ export default function Header() {
             {t("nav_info")}
           </Link>
         </nav>
-        <button
-          onClick={() => setLocale(locale === "en" ? "es" : "en")}
-          className="rounded-md border border-soil-600 px-2 py-1 text-xs text-soil-200 hover:bg-soil-700 hover:text-white"
-          aria-label="Switch language"
-        >
-          {locale === "en" ? "ES · Español" : "EN · English"}
-        </button>
+        <label className="flex items-center gap-1.5 text-xs text-soil-200">
+          <span aria-hidden>🌐</span>
+          <select
+            value={locale}
+            onChange={(e) => setLocale(e.target.value as typeof locale)}
+            aria-label="Language"
+            className="rounded-md border border-soil-600 bg-soil-800 px-2 py-1 text-xs text-soil-100 hover:bg-soil-700 focus:outline-none"
+          >
+            {LOCALES.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.native}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
     </header>
   );

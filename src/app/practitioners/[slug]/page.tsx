@@ -27,6 +27,9 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
           <p className="mt-1 text-soil-600">
             {p.city}, {p.adminArea} · {p.countryCode}
           </p>
+          <p className="mt-0.5 text-sm text-soil-500">
+            {p.yearsExperience} years in practice
+          </p>
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <div className="flex gap-1.5">
@@ -128,6 +131,50 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
           </p>
         )}
       </section>
+
+      {/* Self-maintained depth: how they work, services, selected work */}
+      {p.approach && (
+        <section className="mt-8">
+          <h2 className="text-lg font-semibold text-soil-900">How I work</h2>
+          <p className="mt-2 leading-relaxed text-soil-700">{p.approach}</p>
+        </section>
+      )}
+
+      {p.services.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-lg font-semibold text-soil-900">Services</h2>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {p.services.map((s) => (
+              <div key={s.name} className="rounded-xl border border-soil-200 bg-white p-4">
+                <h3 className="font-medium text-soil-900">{s.name}</h3>
+                <p className="mt-1 text-sm text-soil-600">{s.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {p.caseStudies && p.caseStudies.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-lg font-semibold text-soil-900">Selected work</h2>
+          <div className="mt-3 space-y-3">
+            {p.caseStudies.map((c) => (
+              <div key={c.title} className="rounded-xl border-l-4 border-leaf-500 bg-white p-4 shadow-sm">
+                <h3 className="font-medium text-soil-900">{c.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-soil-600">{c.summary}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <p className="mt-6 text-xs text-soil-500">
+        Practitioners write and maintain these sections themselves - see{" "}
+        <Link href="/for-practitioners" className="text-leaf-700 hover:underline">
+          how profiles work
+        </Link>
+        .
+      </p>
 
       {/* Contact via relay form; raw email never exposed (PRD §8.2) */}
       <section className="mt-8">

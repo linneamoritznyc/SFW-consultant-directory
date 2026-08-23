@@ -44,11 +44,6 @@ function checksFor(p: Practitioner): Check[] {
       hint: "Without it, we cannot tell growers whether you can reach them.",
     },
     {
-      label: "Shipped-samples flag set",
-      done: p.acceptsSamples !== undefined,
-      hint: "Smallholders specifically search for sample-by-post assessment.",
-    },
-    {
       label: "Scale of operations",
       done: p.scaleBands.length > 0,
       hint: "Large operations filter for practitioners who have worked at scale.",
@@ -62,6 +57,21 @@ function checksFor(p: Practitioner): Check[] {
       label: "Bio written (200+ characters)",
       done: p.bio.length >= 200,
       hint: "The bio is what convinces a grower after the match finds you.",
+    },
+    {
+      label: "“How I work” written",
+      done: p.approach.length > 0,
+      hint: "Growers choose between similar matches on working style.",
+    },
+    {
+      label: "Services listed with descriptions",
+      done: p.services.length > 0,
+      hint: "Without concrete services, growers cannot tell what an engagement looks like.",
+    },
+    {
+      label: "At least one case study",
+      done: (p.caseStudies?.length ?? 0) > 0,
+      hint: "Past work with real outcomes is the strongest trust signal a profile can carry.",
     },
   ];
 }

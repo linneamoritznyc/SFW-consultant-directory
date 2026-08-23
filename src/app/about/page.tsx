@@ -51,6 +51,26 @@ export default function AboutPage() {
           takes your problem into account - diagnostic questions steer towards
           lab-techs first, programme-level problems towards consultants.
         </p>
+        <p className="text-sm">
+          The Soil Food Web School describes each role in depth:{" "}
+          <a
+            href="https://soilfoodweb.com/consultants/"
+            target="_blank"
+            rel="noopener"
+            className="text-leaf-700 hover:underline"
+          >
+            what a consultant does ↗
+          </a>{" "}
+          ·{" "}
+          <a
+            href="https://soilfoodweb.com/laboratory-technicians/"
+            target="_blank"
+            rel="noopener"
+            className="text-leaf-700 hover:underline"
+          >
+            what a laboratory technician does ↗
+          </a>
+        </p>
       </Section>
 
       <Section title="How an assessment works">
